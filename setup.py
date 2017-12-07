@@ -47,6 +47,7 @@ setup(
     entry_points={'console_scripts': [
         'django-admin = django.core.management:execute_from_command_line',
     ]},
+    python_requires='>=3.5',
     install_requires=['pytz'],
     extras_require={
         "bcrypt": ["bcrypt"],
