@@ -1,5 +1,6 @@
 import inspect
 import re
+import warnings
 
 from django.apps import apps as django_apps
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.utils.crypto import constant_time_compare
 from django.utils.module_loading import import_string
 from django.views.decorators.debug import sensitive_variables
 
+from ...utils.deprecation import RemovedInDjango60Warning
 from .signals import user_logged_in, user_logged_out, user_login_failed
 
 SESSION_KEY = "_auth_user_id"
@@ -157,6 +159,13 @@ def login(request, user, backend=None):
     session_auth_hash = ""
     if user is None:
         user = request.user
+        if user and isinstance(user, get_user_model()):
+            warnings.warn(
+                "Fallback to request.user when user is None will be removed.",
+                RemovedInDjango60Warning,
+                stacklevel=2,
+            )
+
     if hasattr(user, "get_session_auth_hash"):
         session_auth_hash = user.get_session_auth_hash()
 
