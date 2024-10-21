@@ -64,6 +64,9 @@ class AsyncAuthTest(TestCase):
     async def test_alogin_without_user_no_request_user(self):
         request = HttpRequest()
         request.session = await self.client.asession()
+        # RemovedInDjango61Warning: Fallback to request.user will be removed.
+        # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+        # when the fallback is removed.
         with self.assertRaisesMessage(
             AttributeError,
             "'HttpRequest' object has no attribute 'auser'",
@@ -78,6 +81,9 @@ class AsyncAuthTest(TestCase):
         request.user = AnonymousUser()
         request.auser = auser
         request.session = await self.client.asession()
+        # RemovedInDjango61Warning: Fallback to request.user will be removed.
+        # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+        # when the fallback is removed.
         with self.assertRaisesMessage(
             AttributeError,
             "'AnonymousUser' object has no attribute '_meta'",
@@ -97,6 +103,8 @@ class AsyncAuthTest(TestCase):
             RemovedInDjango61Warning,
             "Fallback to request.user when user is None will be removed.",
         ):
+            # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+            # when the fallback is removed.
             await alogin(request, None)
 
         user = await aget_user(request)

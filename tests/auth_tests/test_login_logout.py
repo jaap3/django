@@ -34,6 +34,9 @@ class TestLogin(TestCase):
         self.assertEqual(self.request.session[auth.SESSION_KEY], str(self.user.pk))
 
     def test_without_user_no_request_user(self):
+        # RemovedInDjango61Warning: Fallback to request.user will be removed.
+        # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+        # when the fallback is removed.
         with self.assertRaisesMessage(
             AttributeError,
             "'HttpRequest' object has no attribute 'user'",
@@ -42,6 +45,9 @@ class TestLogin(TestCase):
 
     def test_without_user_anonymous_request(self):
         self.request.user = AnonymousUser()
+        # RemovedInDjango61Warning: Fallback to request.user will be removed.
+        # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+        # when the fallback is removed.
         with self.assertRaisesMessage(
             AttributeError,
             "'AnonymousUser' object has no attribute '_meta'",
@@ -55,6 +61,8 @@ class TestLogin(TestCase):
 
         msg = "Fallback to request.user when user is None will be removed."
         with self.assertWarnsMessage(RemovedInDjango61Warning, msg):
+            # This will raise AttributeError: 'NoneType' object has no attribute '_meta'
+            # when the fallback is removed.
             auth.login(self.request, None)
 
         self.assertEqual(self.request.session[auth.SESSION_KEY], str(self.user.pk))
