@@ -202,7 +202,17 @@ async def alogin(request, user, backend=None):
     """See login()."""
     session_auth_hash = ""
     if user is None:
+        # Fallback to request.user when user is None.
+        # This is undocumented behaviour and will be removed in Django 6.1.
         user = await request.auser()
+        if user and isinstance(user, get_user_model()):
+            # Avoid a warning when the user remains None or becomes AnonymousUser.
+            # Those cases result in an error down the line anyway.
+            warnings.warn(
+                "Fallback to request.user when user is None will be removed.",
+                RemovedInDjango61Warning,
+                stacklevel=2,
+            )
     if hasattr(user, "get_session_auth_hash"):
         session_auth_hash = user.get_session_auth_hash()
 
