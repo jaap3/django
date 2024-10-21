@@ -7,10 +7,10 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.middleware.csrf import rotate_token
 from django.utils.crypto import constant_time_compare
+from django.utils.deprecation import RemovedInDjango61Warning
 from django.utils.module_loading import import_string
 from django.views.decorators.debug import sensitive_variables
 
-from ...utils.deprecation import RemovedInDjango60Warning
 from .signals import user_logged_in, user_logged_out, user_login_failed
 
 SESSION_KEY = "_auth_user_id"
@@ -162,7 +162,7 @@ def login(request, user, backend=None):
         if user and isinstance(user, get_user_model()):
             warnings.warn(
                 "Fallback to request.user when user is None will be removed.",
-                RemovedInDjango60Warning,
+                RemovedInDjango61Warning,
                 stacklevel=2,
             )
 

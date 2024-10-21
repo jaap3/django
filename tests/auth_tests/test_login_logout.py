@@ -2,7 +2,7 @@ from django.contrib import auth
 from django.contrib.auth.models import AnonymousUser, User
 from django.http import HttpRequest
 from django.test import TestCase
-from django.utils.deprecation import RemovedInDjango60Warning
+from django.utils.deprecation import RemovedInDjango61Warning
 
 
 class TestLogin(TestCase):
@@ -54,7 +54,7 @@ class TestLogin(TestCase):
         self.assertNotIn(auth.SESSION_KEY, self.request.session)
 
         msg = "Fallback to request.user when user is None will be removed."
-        with self.assertWarnsMessage(RemovedInDjango60Warning, msg):
+        with self.assertWarnsMessage(RemovedInDjango61Warning, msg):
             auth.login(self.request, None)
 
         self.assertEqual(self.request.session[auth.SESSION_KEY], str(self.user.pk))

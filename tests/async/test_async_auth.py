@@ -8,7 +8,7 @@ from django.contrib.auth import (
 from django.contrib.auth.models import AnonymousUser, User
 from django.http import HttpRequest
 from django.test import TestCase, override_settings
-from django.utils.deprecation import RemovedInDjango60Warning
+from django.utils.deprecation import RemovedInDjango61Warning
 
 
 class AsyncAuthTest(TestCase):
@@ -94,7 +94,7 @@ class AsyncAuthTest(TestCase):
         request.session = await self.client.asession()
 
         with self.assertWarnsMessage(
-            RemovedInDjango60Warning,
+            RemovedInDjango61Warning,
             "Fallback to request.user when user is None will be removed.",
         ):
             await alogin(request, None)
